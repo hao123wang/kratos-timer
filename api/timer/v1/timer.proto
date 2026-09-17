@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package api.timer.v1;
+
+import "google/api/annotations.proto";
+
+option go_package = "kratos-timer/api/timer/v1;v1";
+
+service Timer {
+	rpc CreateTimer (TimerInfo) returns (TimerInfo) {
+		option (google.api.http) = {
+			post: "/v1/timers"
+			body: "*"
+		};
+	}
+	rpc EnableTimer (EnableTimerRequest) returns (TimerInfo) {
+		option (google.api.http) = {
+			post: "/v1/timers/{id}/enable"
+			body: "*"
+		};
+	}
+	rpc DisableTimer (DisableTimerRequest) returns (TimerInfo) {
+		option (google.api.http) = {
+			post: "/v1/timers/{id}/disable"
+			body: "*"
+		};
+	}
+	rpc GetTimer (GetTimerRequest) returns (TimerInfo) {
+		option (google.api.http) = {
+			get: "/v1/timers/{id}"
+		};
+	}
+	rpc ListTimer (ListTimerRequest) returns (ListTimerReply) {
+		option (google.api.http) = {
+			get: "/v1/timers"
+		};
+	}
+}
+
+// HttpParams 定时任务回调参数
+message HttpParams {
+	string method = 1;
+	string url = 4;
+	map<string, string> headers = 2;
+	string body = 3;
+}
+
+// TimerInfo 定时任务信息
+message TimerInfo {
+	int64 id = 1;
+	string name = 2;
+	string app = 3;
+	string cron = 4;
+	bool enabled = 5;
+	HttpParams http_params = 6;
+}
+
+// EnableTimerRequest 启用定时任务请求
+message EnableTimerRequest {
+	int64 id = 1;
+	string name = 2;
+}
+
+// DisableTimerRequest 禁用定时任务请求
+message DisableTimerRequest {
+	int64 id = 1;
+	string name = 2;
+}
+
+// GetTimerRequest 获取定时任务请求
+message GetTimerRequest {
+	int64 id = 1;
+}
+
+// ListTimerRequest 获取定时任务列表请求
+message ListTimerRequest {
+	string app = 1;
+}
+
+// ListTimerReply 获取定时任务列表回复
+message ListTimerReply {
+	repeated TimerInfo timers = 1;
+}

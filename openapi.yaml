@@ -1,0 +1,166 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: Timer API
+    version: 0.0.1
+paths:
+    /v1/timers:
+        get:
+            tags:
+                - Timer
+            operationId: Timer_ListTimer
+            parameters:
+                - name: app
+                  in: query
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.timer.v1.ListTimerReply'
+        post:
+            tags:
+                - Timer
+            operationId: Timer_CreateTimer
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.timer.v1.TimerInfo'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.timer.v1.TimerInfo'
+    /v1/timers/{id}:
+        get:
+            tags:
+                - Timer
+            operationId: Timer_GetTimer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.timer.v1.TimerInfo'
+    /v1/timers/{id}/disable:
+        post:
+            tags:
+                - Timer
+            operationId: Timer_DisableTimer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.timer.v1.DisableTimerRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.timer.v1.TimerInfo'
+    /v1/timers/{id}/enable:
+        post:
+            tags:
+                - Timer
+            operationId: Timer_EnableTimer
+            parameters:
+                - name: id
+                  in: path
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/api.timer.v1.EnableTimerRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/api.timer.v1.TimerInfo'
+components:
+    schemas:
+        api.timer.v1.DisableTimerRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+            description: DisableTimerRequest 禁用定时任务请求
+        api.timer.v1.EnableTimerRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+            description: EnableTimerRequest 启用定时任务请求
+        api.timer.v1.HttpParams:
+            type: object
+            properties:
+                method:
+                    type: string
+                url:
+                    type: string
+                headers:
+                    type: object
+                    additionalProperties:
+                        type: string
+                body:
+                    type: string
+            description: HttpParams 定时任务回调参数
+        api.timer.v1.ListTimerReply:
+            type: object
+            properties:
+                timers:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/api.timer.v1.TimerInfo'
+            description: ListTimerReply 获取定时任务列表回复
+        api.timer.v1.TimerInfo:
+            type: object
+            properties:
+                id:
+                    type: string
+                name:
+                    type: string
+                app:
+                    type: string
+                cron:
+                    type: string
+                enabled:
+                    type: boolean
+                httpParams:
+                    $ref: '#/components/schemas/api.timer.v1.HttpParams'
+            description: TimerInfo 定时任务信息
+tags:
+    - name: Timer
